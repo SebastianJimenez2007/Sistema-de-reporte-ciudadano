@@ -1,0 +1,244 @@
+:root {
+  --primary: #2563eb;
+  --bg: #f1f5f9;
+  --white: #ffffff;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-dark);
+}
+
+main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+main h1 {
+  font-size: 28px;
+  margin: 20px 0 10px 0;
+}
+
+main p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin: 10px 0;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white);
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-box {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.logo-text h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.logo-text span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.nav-right {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: var(--text-dark);
+  padding: 8px 15px;
+  border-radius: 10px;
+  transition: 0.3s;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-item:hover {
+  background: #e2e8f0;
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Botón Hamburguesa (oculto en desktop) */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-dark);
+}
+
+.nav-menu {
+  display: none;
+  gap: 10px;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* TABLET (768px y arriba) */
+@media (max-width: 768px) {
+  main {
+    padding: 15px;
+  }
+
+  main h1 {
+    font-size: 24px;
+  }
+
+  main p {
+    font-size: 14px;
+  }
+
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .logo-text h3 {
+    font-size: 14px;
+  }
+
+  .logo-text span {
+    font-size: 11px;
+  }
+
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .nav-right {
+    gap: 5px;
+  }
+
+  #map {
+    height: 300px;
+  }
+}
+
+/* MÓVIL (480px y menos) */
+@media (max-width: 480px) {
+  main {
+    padding: 10px;
+  }
+
+  main h1 {
+    font-size: 20px;
+    margin: 15px 0 8px 0;
+  }
+
+  main p {
+    font-size: 13px;
+  }
+
+  .navbar {
+    flex-direction: row;
+    gap: 0;
+    padding: 10px 15px;
+    justify-content: space-between;
+  }
+
+  .nav-left {
+    width: auto;
+    justify-content: flex-start;
+  }
+
+  /* Mostrar botón hamburguesa */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* Ocultar menú por defecto y hacer desplegable */
+  .nav-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: 0;
+    background: var(--white);
+    flex-direction: column;
+    gap: 0;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+  }
+
+  /* Mostrar menú cuando tiene clase active */
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .nav-right {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 12px 15px;
+    font-size: 14px;
+    text-align: left;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .nav-item:hover {
+    background: #e2e8f0;
+  }
+
+  .nav-item i {
+    margin-right: 8px;
+  }
+
+  #map {
+    height: 250px;
+  }
+}
