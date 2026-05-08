@@ -6,9 +6,63 @@
     <title>Explorar - ReportApp</title>
   </head>
   <body>
-    <main class="container mt-4">
+    <main>
       <h1>Explorar Reportes</h1>
-      <p>Aquí aparecerán los reportes ciudadanos.</p>
+      <p class="explorar-subtitulo">
+        <span id="total-encontrados">0</span> reportes encontrados
+      </p>
+
+      <!-- loos filtross -->
+      <div class="filtros-card">
+        <div class="filtros-header">
+          <i class="bi bi-funnel"></i>
+          <span>Filtros</span>
+        </div>
+        <div class="filtros-grid">
+          <div class="filtro-item">
+            <label>Categoría</label>
+            <select id="filtroCategoria" class="filtro-select">
+              <option value="todas">Todas</option>
+              <option value="Infraestructura">Infraestructura</option>
+              <option value="Alumbrado">Alumbrado</option>
+              <option value="Aseo">Aseo</option>
+              <option value="Vías">Vías</option>
+              <option value="Seguridad">Seguridad</option>
+              <option value="Espacios Públicos">Espacios Públicos</option>
+            </select>
+          </div>
+
+          <div class="filtro-item">
+            <label>Estado</label>
+            <select id="filtroEstado" class="filtro-select">
+              <option value="todos">Todos</option>
+              <option value="activo">Activo</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="resuelto">Resuelto</option>
+            </select>
+          </div>
+
+          <div class="filtro-item">
+            <label>Ordenar por</label>
+            <select id="ordenar" class="filtro-select">
+              <option value="recientes">Más recientes</option>
+              <option value="antiguos">Más antiguos</option>
+              <option value="populares">Más apoyados</option>
+              <option value="vistas">Más vistos</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID DE CARDS (3 columnas) -->
+      <div class="explorar-cards"></div>
+
+      <!-- SIN RESULTADOS -->
+      <div class="sin-resultados" id="sin-resultados" style="display: none">
+        <span>🔍</span>
+        <p>No se encontraron reportes con estos filtros</p>
+        <button id="btn-limpiar-filtros">Limpiar filtros</button>
+      </div>
     </main>
   </body>
 </html>

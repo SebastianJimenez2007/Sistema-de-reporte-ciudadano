@@ -1,71 +1,78 @@
-// ===== SISTEMA SIMPLE: Cambiar de páginas sin recargar =====
+// ===== SISTEMA SPA: Single Page Application =====
+import { initInicio } from "./inicio.js";
+import { initExplorar } from "./explorar.js";
+import { initTransparencia } from "./transparencia.js";
 
 const routes = {
   index: "./pages/inicio.html",
   explorar: "./pages/explorar.html",
   perfil: "./pages/perfil.html",
+  transparencia: "./pages/transparencia.html",
 };
 
-// 1. INYECTAR NAVBAR
+// 1. Inyectar navbar
 async function injectNavbar() {
   try {
-    const response = await fetch("./navbar.html");
-    if (!response.ok) throw new Error("No se encontró navbar");
+    const response = await fetch("./components/navbar.html");
+    if (!response.ok) throw new Error("No se encontró navbar.html");
 
     const html = await response.text();
-    document.getElementById("navbar-placeholder").innerHTML = html;
+    const navbar = document.getElementById("navbar-placeholder");
+    if (navbar) navbar.innerHTML = html;
 
     addNavbarListeners();
     setActiveLink("index");
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error cargando navbar:", err);
   }
 }
 
-// 2. INTERCEPTAR CLICS EN LINKS
+// 2. Inyectar footer
+async function injectFooter() {
+  try {
+    const response = await fetch("./components/footer.html");
+    if (!response.ok) throw new Error("No se encontró footer.html");
+
+    const html = await response.text();
+    const footer = document.getElementById("footer-placeholder");
+    if (footer) footer.innerHTML = html;
+  } catch (err) {
+    console.error("Error cargando footer:", err);
+  }
+}
+
+// 3. Listeners del navbar
 function addNavbarListeners() {
   const navItems = document.querySelectorAll(".nav-item");
-  const menuToggle = document.getElementById("menuToggle");
   const navMenu = document.getElementById("navMenu");
-
-  // Toggle del menú hamburguesa
-  if (menuToggle) {
-    menuToggle.addEventListener("click", () => {
-      navMenu.classList.toggle("active");
-    });
-  }
 
   navItems.forEach((item) => {
     item.addEventListener("click", (e) => {
-      e.preventDefault(); // Evitar recarga
+      e.preventDefault();
 
       const page = item.getAttribute("href");
-
-      // Cambiar URL PRIMERO con hash
       window.location.hash = `#${page}`;
 
-      // Luego cargar la página
       loadPage(page);
       setActiveLink(page);
 
-      // Cerrar menú en móvil
-      if (navMenu) {
-        navMenu.classList.remove("active");
-      }
+      if (navMenu) navMenu.classList.remove("active");
     });
   });
 }
 
-// 3. CARGAR PÁGINA SIN RECARGAR
+// 4. Cargar página
 async function loadPage(page) {
   try {
-    const filePath = routes[page];
-    const response = await fetch(filePath);
-    if (!response.ok) throw new Error(`Error: ${filePath}`);
+    if (!routes[page]) {
+      console.error(`Página no encontrada: ${page}`);
+      return;
+    }
+
+    const response = await fetch(routes[page]);
+    if (!response.ok) throw new Error(`Error al cargar: ${routes[page]}`);
 
     const html = await response.text();
-
-    // Extrae el <main> y lo reemplaza
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
     const mainContent = doc.querySelector("main");
@@ -73,35 +80,39 @@ async function loadPage(page) {
     if (mainContent) {
       document.querySelector("main").innerHTML = mainContent.innerHTML;
     }
+
+    // Inicializar lógica según la página
+    setTimeout(() => {
+      if (page === "index") initInicio();
+      if (page === "explorar") initExplorar(window.reportesMock || []);
+      if (page === "transparencia") initTransparencia();
+    }, 100);
   } catch (err) {
-    console.error("Error cargando:", err);
+    console.error("Error cargando página:", err);
   }
 }
 
-// 4. MARCAR BOTÓN ACTIVO
+// 5. Marcar botón activo
 function setActiveLink(page) {
-  const navItems = document.querySelectorAll(".nav-item");
-  navItems.forEach((item) => {
-    const href = item.getAttribute("href");
-    if (href === page) {
-      item.classList.add("active");
-    } else {
-      item.classList.remove("active");
-    }
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    const isActive = item.getAttribute("href") === page;
+    item.classList.toggle("active", isActive);
   });
 }
 
-// 4.5. ESCUCHAR CAMBIOS EN EL HASH (BOTÓN ATRÁS/ADELANTE)
+// 6. Navegación atrás/adelante
 window.addEventListener("hashchange", () => {
   const page = window.location.hash.slice(1) || "index";
   loadPage(page);
   setActiveLink(page);
 });
 
-// 5. INICIAR
-injectNavbar().then(() => {
-  // Si hay hash en la URL, cargar esa página, sino cargar "index"
-  const initialPage = window.location.hash.slice(1) || "index";
-  loadPage(initialPage);
-  setActiveLink(initialPage);
+// 7. Iniciar aplicación
+document.addEventListener("DOMContentLoaded", () => {
+  injectNavbar().then(() => {
+    const initialPage = window.location.hash.slice(1) || "index";
+    loadPage(initialPage);
+    setActiveLink(initialPage);
+  });
+  injectFooter();
 });

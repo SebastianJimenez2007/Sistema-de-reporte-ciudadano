@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transparencia - ReportApp</title>
+  </head>
+  <body>
+    <main>
+      <!-- HEADER -->
+      <div class="trans-header">
+        <h1>Transparencia y Estadísticas</h1>
+        <p>Métricas públicas de gestión y seguimiento de reportes ciudadanos</p>
+      </div>
+
+      <!-- FILTRO DE PERÍODO -->
+      <div class="periodo-card">
+        <span class="periodo-label"><i class="bi bi-calendar-fill"></i> Período:</span>
+        <div class="periodo-btns">
+          <button class="periodo-btn" data-periodo="7d">Últimos 7 días</button>
+          <button class="periodo-btn" data-periodo="30d">
+            Últimos 30 días
+          </button>
+          <button class="periodo-btn active" data-periodo="all">
+            Todo el tiempo
+          </button>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS CLAVE -->
+      <div class="trans-metricas">
+        <div class="trans-metrica-card">
+          <div class="metrica-top">
+            <span class="metrica-icon azul"><i class="bi bi-bar-chart-fill"></i></span>
+            <span class="metrica-tendencia">↑</span>
+          </div>
+          <div class="metrica-numero" id="m-total">0</div>
+          <div class="metrica-texto">Reportes Totales</div>
+        </div>
+
+        <div class="trans-metrica-card">
+          <div class="metrica-top">
+            <span class="metrica-icon amarillo"><i class="bi bi-alarm-fill"></i></span>
+            <span class="metrica-badge" id="m-velocidad-badge">Rápido</span>
+          </div>
+          <div class="metrica-numero" id="m-tiempo">0d</div>
+          <div class="metrica-texto">Tiempo Promedio Respuesta</div>
+        </div>
+
+        <div class="trans-metrica-card">
+          <div class="metrica-top">
+            <span class="metrica-icon verde"><i class="bi bi-check-square-fill"></i></span>
+            <span class="metrica-badge verde-badge" id="m-tasa-badge">0%</span>
+          </div>
+          <div class="metrica-numero" id="m-resueltos">0</div>
+          <div class="metrica-texto">Reportes Resueltos</div>
+        </div>
+
+        <div class="trans-metrica-card">
+          <div class="metrica-top">
+            <span class="metrica-icon rojo"><i class="bi bi-exclamation-triangle-fill"></i></span>
+          </div>
+          <div class="metrica-numero" id="m-pendientes">0</div>
+          <div class="metrica-texto">Pendientes Sin Atender</div>
+        </div>
+      </div>
+
+      <!-- SEMÁFORO DE BARRIOS -->
+      <div class="trans-card">
+        <h2><i class="bi bi-stoplights-fill"></i> Semáforo de Barrios</h2>
+        <p class="trans-subtitle">Nivel de criticidad por zona</p>
+        <div class="semaforo-grid" id="semaforo-grid"></div>
+      </div>
+
+      <!-- GRÁFICOS -->
+      <div class="trans-grid-2">
+        <div class="trans-card">
+          <h2>Distribución por Categoría</h2>
+          <div class="chart-wrapper">
+            <canvas id="chart-categorias"></canvas>
+          </div>
+        </div>
+
+        <div class="trans-card">
+          <h2>Estado de Reportes</h2>
+          <div class="chart-wrapper">
+            <canvas id="chart-estados"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANKING DE ZONAS -->
+      <div class="trans-card">
+        <h2><i class="bi bi-bar-chart-fill"></i> Ranking de Zonas Críticas</h2>
+        <p class="trans-subtitle">
+          Zonas con mayor cantidad de reportes sin resolver
+        </p>
+        <div id="ranking-zonas"></div>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div class="trans-disclaimer">
+        <strong>Nota:</strong> Estos datos son de carácter público y tienen como
+        objetivo generar transparencia en la gestión de problemáticas urbanas.
+        El historial completo de cada reporte queda registrado permanentemente.
+        La presión ciudadana organizada es fundamental para promover respuestas
+        efectivas de las autoridades.
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="../js/transparencia.js"></script>
+  </body>
+</html>

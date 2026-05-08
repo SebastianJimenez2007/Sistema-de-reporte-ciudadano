@@ -1,0 +1,1 @@
+let map = L.map('mi_mapa').setView([10.404775, -75.498975], 12)

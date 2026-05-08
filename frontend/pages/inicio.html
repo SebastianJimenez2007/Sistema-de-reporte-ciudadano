@@ -3,16 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <title>Inicio - ReportApp</title>
   </head>
   <body>
     <main>
-      <h1>Bienvenido a ReportApp</h1>
-      <p>Sistema de Reportes Ciudadanos</p>
-      <p>
-        Aquí puedes crear, explorar y gestionar reportes sobre problemas en tu
-        comunidad.
-      </p>
+      <div class="inicio-layout">
+        <div class="contenido-principal">
+          <div class="mapa-wrapper">
+            <div id="map"></div>
+            <!-- JS llena el mapa -->
+          </div>
+
+          <h2>Reportes Recientes</h2>
+          <div class="cards"></div>
+          <!-- JS inyecta cards aquí -->
+        </div>
+
+        <aside class="sidebar">
+          <!-- estadísticas estáticas por ahora -->
+        </aside>
+      </div>
+      <button class="btn-nuevo-reporte" title="Nuevo reporte">+</button>
     </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </body>
 </html>
