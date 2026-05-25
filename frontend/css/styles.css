@@ -1211,3 +1211,30 @@ main p  { font-size: 16px; line-height: 1.6; color: var(--text-light); margin: 1
   .explorar-cards { grid-template-columns: 1fr; }
   .filtros-grid   { grid-template-columns: 1fr; }
 }
+
+.perfirWraper{
+  padding: 40px;
+  position: relative;
+  text-align: center;
+  border-radius: 10px;
+  width: 100%;
+  
+  background: #ffffff;
+  
+
+  
+}
+
+.perfirWraper a{
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 15px;
+  background: #dedede;
+}
+
+.perfirWraper a:hover{
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 15px;
+  background: #a4c2ff;
+}

@@ -4,6 +4,7 @@ import { abrirModal } from "../components/modal.js";
 
 // ===== DATOS (TEMPORALES) =====
 export const reportes = [
+  
   {
     id: 1,
     titulo: "Alcantarilla destapada en vía",
