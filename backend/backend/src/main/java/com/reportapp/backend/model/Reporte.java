@@ -1,51 +1,86 @@
 package com.reportapp.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
-@Data
 @Entity
-@Table(name = "reportes")
+@Table(name = "reporte")
 public class Reporte {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_reporte")
+    private Integer idReporte;
 
-    @Column(nullable = false, length = 200)
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    @JsonIgnoreProperties("reportes")
+    private Categoria categoria;
+
+    @Column(name = "titulo")
     private String titulo;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(length = 300)
+    @Column(name = "estado")
+    private String estado;
+
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "direccion")
     private String direccion;
 
-    @Column(nullable = false)
-    private Double latitud;
+    @Column(name = "latitud")
+    private BigDecimal latitud;
 
-    @Column(nullable = false)
-    private Double longitud;
+    @Column(name = "longitud")
+    private BigDecimal longitud;
 
-    @Column(length = 100)
-    private String barrio;
-
-    @Column(length = 100)
-    private String categoria;
-
-    @Column(length = 20)
-    private String estado = "pendiente"; // pendiente, activo, resuelto
-
-    @Column(length = 500)
+    @Column(name = "imagen_url")
     private String imagenUrl;
 
-    private Integer vistas = 0;
-    private Integer apoyos = 0;
+    @Column(name = "vistas")
+    private Integer vistas;
 
-    @Column(name = "fecha_reporte")
-    private LocalDateTime fechaReporte = LocalDateTime.now();
+    @Column(name = "apoyo")
+    private Integer apoyo;
 
-    @Column(name = "fecha_actualizacion")
-    private LocalDateTime fechaActualizacion = LocalDateTime.now();
+    public Integer getIdReporte() { return idReporte; }
+    public void setIdReporte(Integer idReporte) { this.idReporte = idReporte; }
+
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public BigDecimal getLatitud() { return latitud; }
+    public void setLatitud(BigDecimal latitud) { this.latitud = latitud; }
+
+    public BigDecimal getLongitud() { return longitud; }
+    public void setLongitud(BigDecimal longitud) { this.longitud = longitud; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
+    public Integer getVistas() { return vistas; }
+    public void setVistas(Integer vistas) { this.vistas = vistas; }
+
+    public Integer getApoyo() { return apoyo; }
+    public void setApoyo(Integer apoyo) { this.apoyo = apoyo; }
 }

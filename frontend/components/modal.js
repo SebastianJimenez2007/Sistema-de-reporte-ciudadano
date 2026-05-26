@@ -1,5 +1,6 @@
 // ===== COMPONENTE MODAL NUEVO REPORTE =====
- 
+import { API_URL } from '../js/api-config.js';
+
 const categorias = [
   { nombre: "Infraestructura",   icono: "🔧" },
   { nombre: "Espacios Públicos", icono: "🌳" },
@@ -26,10 +27,8 @@ let marker = null;
  
 // ===== ABRIR MODAL =====
 export function abrirModal() {
-  // Reset estado
   estado = { paso: 1, categoria: null, descripcion: "", lat: null, lng: null, direccion: "", imagen: null };
  
-  // Crear overlay
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
   overlay.id = "modal-overlay";
@@ -41,7 +40,6 @@ export function abrirModal() {
         <button class="modal-close" id="modal-close">✕</button>
       </div>
  
-      <!-- Stepper -->
       <div class="stepper">
         <div class="step active" id="step-1">
           <div class="step-circle">1</div>
@@ -57,10 +55,8 @@ export function abrirModal() {
       </div>
       <p class="step-label" id="step-label">Paso 1: Selecciona la categoría</p>
  
-      <!-- Contenido del paso -->
       <div class="modal-body" id="modal-body"></div>
  
-      <!-- Botones -->
       <div class="modal-footer">
         <button class="btn-anterior" id="btn-anterior" style="display:none">Anterior</button>
         <button class="btn-siguiente" id="btn-siguiente">Siguiente</button>
@@ -70,7 +66,6 @@ export function abrirModal() {
  
   document.body.appendChild(overlay);
  
-  // Listeners
   document.getElementById("modal-close").addEventListener("click", cerrarModal);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrarModal(); });
   document.getElementById("btn-siguiente").addEventListener("click", siguientePaso);
@@ -79,31 +74,27 @@ export function abrirModal() {
   renderPaso();
 }
  
-
 function cerrarModal() {
   if (modalMap) { modalMap.remove(); modalMap = null; }
   const overlay = document.getElementById("modal-overlay");
   if (overlay) overlay.remove();
 }
  
- /// renderiza el paso actual 
 function renderPaso() {
   const body = document.getElementById("modal-body");
   const label = document.getElementById("step-label");
   const btnAnterior = document.getElementById("btn-anterior");
   const btnSiguiente = document.getElementById("btn-siguiente");
  
-  // Actualizar stepper
   [1, 2, 3].forEach(n => {
     const step = document.getElementById(`step-${n}`);
-    step.classList.toggle("active",    n === estado.paso);
+    step.classList.toggle("active", n === estado.paso);
     step.classList.toggle("completado", n < estado.paso);
   });
  
   btnAnterior.style.display = estado.paso > 1 ? "block" : "none";
-  btnSiguiente.textContent  = estado.paso === 3 ? "Enviar Reporte" : "Siguiente";
+  btnSiguiente.textContent = estado.paso === 3 ? "Enviar Reporte" : "Siguiente";
  
-  // Renderizar contenido
   if (estado.paso === 1) {
     label.textContent = "Paso 1: Selecciona la categoría";
     btnSiguiente.disabled = !estado.categoria;
@@ -175,7 +166,6 @@ function renderPaso() {
       <div id="preview-img"></div>
     `;
  
-    // Inicializa mapa del modal
     setTimeout(() => {
       if (modalMap) { modalMap.remove(); modalMap = null; }
  
@@ -200,7 +190,6 @@ function renderPaso() {
         document.getElementById("btn-siguiente").disabled = false;
         document.getElementById("direccion-box").style.display = "flex";
  
-        // Reverse geocoding con Nominatim
         try {
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${estado.lat}&lon=${estado.lng}&format=json`
@@ -215,7 +204,6 @@ function renderPaso() {
       });
     }, 100);
  
-    // escoger entre foto o galeria
     ["input-camara", "input-galeria"].forEach(id => {
       document.getElementById(id)?.addEventListener("change", (e) => {
         const file = e.target.files[0];
@@ -235,7 +223,6 @@ function renderPaso() {
   }
 }
  
-// La navegacion 
 function siguientePaso() {
   if (estado.paso < 3) {
     estado.paso++;
@@ -252,24 +239,65 @@ function anteriorPaso() {
   }
 }
  
-// enviar el reporte
-function enviarReporte() {
-  //  Aquí conectamos el backend backend PHP
-  console.log("Reporte a enviar:", estado);
- 
-  // Por ahora va a mostrar la confirmación jiji
-  const body = document.getElementById("modal-body");
-  const footer = document.getElementById("modal-footer");
-  body.innerHTML = `
-    <div class="exito">
-      <div class="exito-icono"><i class="bi bi-check-square"></i></div>
-      <h3>¡Reporte enviado!</h3>
-      <p>Tu reporte ha sido registrado. La comunidad y las autoridades podrán verlo.</p>
-    </div>
-  `;
-  document.querySelector(".modal-footer").innerHTML = `
-    <button class="btn-siguiente" onclick="document.getElementById('modal-overlay').remove()">
-      Cerrar
-    </button>
-  `;
+async function enviarReporte() {
+  const idCategoria = obtenerIdCategoria(estado.categoria);
+  
+  const nuevoReporte = {
+    titulo: "Reporte ciudadano",
+    descripcion: estado.descripcion,
+    categoria: { idCategoria: idCategoria },
+    direccion: estado.direccion,
+    latitud: estado.lat,
+    longitud: estado.lng,
+    estado: "Pendiente"
+  };
+
+  console.log("Enviando reporte:", nuevoReporte);
+
+  try {
+    const response = await fetch(`${API_URL}/reportes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoReporte)
+    });
+
+    if (response.ok) {
+      const reporteCreado = await response.json();
+      console.log("Reporte creado:", reporteCreado);
+      
+      const body = document.getElementById("modal-body");
+      body.innerHTML = `
+        <div class="exito">
+          <div class="exito-icono"><i class="bi bi-check-square"></i></div>
+          <h3>¡Reporte enviado!</h3>
+          <p>Tu reporte ha sido registrado. La comunidad y las autoridades podrán verlo.</p>
+        </div>
+      `;
+      document.querySelector(".modal-footer").innerHTML = `
+        <button class="btn-siguiente" onclick="window.location.reload();">
+          Cerrar
+        </button>
+      `;
+    } else {
+      const error = await response.text();
+      console.error("Error respuesta:", error);
+      alert(`Error al enviar reporte: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error de conexión:', error);
+    alert('Error de conexión con el servidor. ¿El backend está corriendo?');
+  }
+}
+
+function obtenerIdCategoria(nombreCategoria) {
+  const categoriasMap = {
+    'Infraestructura': 1,
+    'Alumbrado Público': 1,
+    'Espacios Públicos': 2,
+    'Seguridad': 3,
+    'Aseo': 4,
+    'Vías': 5,
+    'Otros': 6
+  };
+  return categoriasMap[nombreCategoria] || 1;
 }
