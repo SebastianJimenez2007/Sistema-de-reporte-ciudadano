@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Veedor - ReportApp</title>
+</head>
+<body>
+  <main>
+    <div class="veedor-panel">
+      <div class="panel-header">
+        <h1><i class="bi bi-shield-check"></i> Panel de Veedor</h1>
+        <p>Moderación y validación de reportes ciudadanos</p>
+      </div>
+
+      <div class="filtros-moderacion">
+        <select id="filtro-estado-moderacion">
+          <option value="todos">Todos los reportes</option>
+          <option value="pendiente">Pendientes de revisión</option>
+          <option value="validado">Validados</option>
+          <option value="rechazado">Rechazados</option>
+        </select>
+        <button class="btn-actualizar" id="btn-actualizar">Actualizar</button>
+      </div>
+
+      <div class="reportes-moderacion" id="reportes-moderacion"></div>
+    </div>
+  </main>
+</body>
+</html>

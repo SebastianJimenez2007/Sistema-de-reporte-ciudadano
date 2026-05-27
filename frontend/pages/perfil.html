@@ -1,15 +1,106 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Perfil - ReportApp</title>
-  </head>
-  <body>
-    <main class="container mt-4">
-      <div class="perfirWraper"> 
-      <a  href="">iniciar sesion</a>
-      <a  href="">registrarse</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil - ReportApp</title>
+</head>
+<body>
+  <main>
+    <!-- VISTA: NO HAY SESIÓN -->
+    <div class="perfil-no-sesion" id="vista-no-sesion">
+      <div class="perfil-no-sesion-icon">👤</div>
+      <h2>Tu perfil</h2>
+      <p>Inicia sesión o regístrate para acceder a tu perfil, ver tus reportes y participar en la comunidad.</p>
+      <div class="perfil-btns">
+        <button class="btn-iniciar-sesion" id="btn-ir-login">
+          <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+        </button>
+        <button class="btn-registrarse" id="btn-ir-registro">
+          <i class="bi bi-person-plus"></i> Registrarse
+        </button>
       </div>
-    </main>
+    </div>
+
+    <!-- VISTA: HAY SESIÓN -->
+    <div class="perfil-con-sesion" id="vista-con-sesion" style="display:none">
+      <div class="perfil-header">
+        <div class="perfil-avatar" id="perfil-avatar">👤</div>
+        <div class="perfil-info">
+          <h2 id="perfil-nombre">Nombre Usuario</h2>
+          <span class="perfil-rol-badge" id="perfil-rol-badge">ciudadano</span>
+          <p id="perfil-email">email@ejemplo.com</p>
+          <small>Miembro desde <span id="perfil-fecha-registro">2024</span></small>
+        </div>
+        <button class="btn-cerrar-sesion" id="btn-cerrar-sesion">
+          <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </button>
+      </div>
+
+      <!-- Estadísticas para CIUDADANO -->
+      <div class="perfil-stats ciudadano-stats" id="ciudadano-stats">
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-reportes">0</div>
+          <div class="perfil-stat-label">Mis Reportes</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-apoyos">0</div>
+          <div class="perfil-stat-label">Apoyos dados</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-resueltos">0</div>
+          <div class="perfil-stat-label">Resueltos</div>
+        </div>
+      </div>
+
+      <!-- Estadísticas para VEEDOR -->
+      <div class="perfil-stats veedor-stats" id="veedor-stats" style="display:none">
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-moderados">0</div>
+          <div class="perfil-stat-label">Reportes Moderados</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-pendientes">0</div>
+          <div class="perfil-stat-label">Pendientes por Revisar</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-validados">0</div>
+          <div class="perfil-stat-label">Validados</div>
+        </div>
+      </div>
+
+      <!-- Estadísticas para ENTIDAD -->
+      <div class="perfil-stats entidad-stats" id="entidad-stats" style="display:none">
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-asignados">0</div>
+          <div class="perfil-stat-label">Reportes Asignados</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-en-proceso">0</div>
+          <div class="perfil-stat-label">En Proceso</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-resueltos-entidad">0</div>
+          <div class="perfil-stat-label">Resueltos</div>
+        </div>
+      </div>
+
+      <!-- Estadísticas para ADMIN -->
+      <div class="perfil-stats admin-stats" id="admin-stats" style="display:none">
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-usuarios">0</div>
+          <div class="perfil-stat-label">Usuarios Totales</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-reportes-admin">0</div>
+          <div class="perfil-stat-label">Reportes Totales</div>
+        </div>
+        <div class="perfil-stat">
+          <div class="perfil-stat-numero" id="stat-instituciones">0</div>
+          <div class="perfil-stat-label">Instituciones</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
 </html>

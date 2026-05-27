@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin - ReportApp</title>
+</head>
+<body>
+  <main>
+    <div class="admin-panel">
+      <div class="panel-header">
+        <h1><i class="bi bi-shield-lock"></i> Panel de Administración</h1>
+        <p>Gestión completa del sistema</p>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-card-icon">👥</div>
+          <h3>Gestionar Usuarios</h3>
+          <p>Crear, editar o eliminar usuarios del sistema</p>
+          <button class="btn-admin" id="btn-gestionar-usuarios">Ir a Usuarios</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-icon">🏛️</div>
+          <h3>Instituciones</h3>
+          <p>Administrar entidades y sus permisos</p>
+          <button class="btn-admin" id="btn-gestionar-instituciones">Ir a Instituciones</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-icon">📊</div>
+          <h3>Métricas Globales</h3>
+          <p>Ver estadísticas completas del sistema</p>
+          <button class="btn-admin" id="btn-metricas">Ver Métricas</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-icon">⚙️</div>
+          <h3>Configuración</h3>
+          <p>Ajustes generales del sistema</p>
+          <button class="btn-admin" id="btn-configuracion">Configurar</button>
+        </div>
+      </div>
+
+      <div class="admin-table">
+        <h3>Últimos Reportes</h3>
+        <table class="table">
+          <thead>
+            <tr><th>ID</th><th>Título</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="admin-reportes-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+    import { getSesion } from '../js/auth.js';
+    if (getSesion()?.rol !== 'admin') window.location.hash = '#index';
+  </script>
+</body>
+</html>
