@@ -11,6 +11,7 @@ const categorias = [
   { nombre: "Otros",             icono: "📋" },
 ];
  
+// Estado del formulario
 let estado = {
   paso: 1,
   categoria: null,
@@ -24,6 +25,7 @@ let estado = {
 let modalMap = null;
 let marker = null;
  
+// ===== ABRIR MODAL =====
 export function abrirModal() {
   estado = { paso: 1, categoria: null, descripcion: "", lat: null, lng: null, direccion: "", imagen: null };
  
@@ -167,7 +169,9 @@ function renderPaso() {
     setTimeout(() => {
       if (modalMap) { modalMap.remove(); modalMap = null; }
  
-      const centro = estado.lat ? [estado.lat, estado.lng] : [4.65, -74.1];
+      const centro = estado.lat
+        ? [estado.lat, estado.lng]
+        : [4.65, -74.1];
  
       modalMap = L.map("modal-map").setView(centro, 13);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(modalMap);
@@ -187,7 +191,9 @@ function renderPaso() {
         document.getElementById("direccion-box").style.display = "flex";
  
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${estado.lat}&lon=${estado.lng}&format=json`);
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${estado.lat}&lon=${estado.lng}&format=json`
+          );
           const data = await res.json();
           estado.direccion = data.display_name || "Ubicación seleccionada";
           document.getElementById("direccion-texto").textContent = estado.direccion;
@@ -234,78 +240,63 @@ function anteriorPaso() {
 }
  
 async function enviarReporte() {
-    const btnEnviar = document.getElementById("btn-siguiente");
-    const textoOriginal = btnEnviar.textContent;
-    btnEnviar.textContent = "Enviando...";
-    btnEnviar.disabled = true;
-    
-    const formData = new FormData();
-    
-    const idCategoria = obtenerIdCategoria(estado.categoria);
-    
-    const reporteData = {
-        titulo: "Reporte ciudadano",
-        descripcion: estado.descripcion,
-        categoria: { idCategoria: idCategoria },
-        direccion: estado.direccion,
-        latitud: estado.lat,
-        longitud: estado.lng,
-        estado: "Pendiente"
-    };
-    
-    formData.append('reporte', new Blob([JSON.stringify(reporteData)], {type: 'application/json'}));
-    
-    if (estado.imagen) {
-        formData.append('imagen', estado.imagen);
-        console.log("Imagen seleccionada:", estado.imagen.name);
+  const idCategoria = obtenerIdCategoria(estado.categoria);
+  
+  const nuevoReporte = {
+    titulo: "Reporte ciudadano",
+    descripcion: estado.descripcion,
+    categoria: { idCategoria: idCategoria },
+    direccion: estado.direccion,
+    latitud: estado.lat,
+    longitud: estado.lng,
+    estado: "Pendiente"
+  };
+
+  console.log("Enviando reporte:", nuevoReporte);
+
+  try {
+    const response = await fetch(`${API_URL}/reportes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoReporte)
+    });
+
+    if (response.ok) {
+      const reporteCreado = await response.json();
+      console.log("Reporte creado:", reporteCreado);
+      
+      const body = document.getElementById("modal-body");
+      body.innerHTML = `
+        <div class="exito">
+          <div class="exito-icono"><i class="bi bi-check-square"></i></div>
+          <h3>¡Reporte enviado!</h3>
+          <p>Tu reporte ha sido registrado. La comunidad y las autoridades podrán verlo.</p>
+        </div>
+      `;
+      document.querySelector(".modal-footer").innerHTML = `
+        <button class="btn-siguiente" onclick="window.location.reload();">
+          Cerrar
+        </button>
+      `;
+    } else {
+      const error = await response.text();
+      console.error("Error respuesta:", error);
+      alert(`Error al enviar reporte: ${response.status}`);
     }
-    
-    try {
-        const response = await fetch(`${API_URL}/reportes`, {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (response.ok) {
-            const reporteCreado = await response.json();
-            console.log("Reporte creado:", reporteCreado);
-            
-            const body = document.getElementById("modal-body");
-            body.innerHTML = `
-                <div class="exito">
-                    <div class="exito-icono"><i class="bi bi-check-square"></i></div>
-                    <h3>¡Reporte enviado!</h3>
-                    <p>Tu reporte ha sido registrado. La comunidad y las autoridades podrán verlo.</p>
-                </div>
-            `;
-            document.querySelector(".modal-footer").innerHTML = `
-                <button class="btn-siguiente" onclick="window.location.reload();">
-                    Cerrar
-                </button>
-            `;
-        } else {
-            const error = await response.text();
-            console.error("Error respuesta:", error);
-            alert(`Error al enviar reporte: ${response.status}`);
-            btnEnviar.textContent = textoOriginal;
-            btnEnviar.disabled = false;
-        }
-    } catch (error) {
-        console.error('Error de conexión:', error);
-        alert('Error de conexión con el servidor. ¿El backend está corriendo?');
-        btnEnviar.textContent = textoOriginal;
-        btnEnviar.disabled = false;
-    }
+  } catch (error) {
+    console.error('Error de conexión:', error);
+    alert('Error de conexión con el servidor. ¿El backend está corriendo?');
+  }
 }
 
 function obtenerIdCategoria(nombreCategoria) {
   const categoriasMap = {
     'Infraestructura': 1,
     'Alumbrado Público': 1,
-    'Espacios Públicos': 4,
-    'Seguridad': 5,
-    'Aseo': 3,
-    'Vías': 2,
+    'Espacios Públicos': 2,
+    'Seguridad': 3,
+    'Aseo': 4,
+    'Vías': 5,
     'Otros': 6
   };
   return categoriasMap[nombreCategoria] || 1;
