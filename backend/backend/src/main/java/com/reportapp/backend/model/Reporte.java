@@ -33,6 +33,9 @@ public class Reporte {
     @Column(name = "direccion")
     private String direccion;
 
+    @Column(name = "barrio")
+    private String barrio;
+
     @Column(name = "latitud")
     private BigDecimal latitud;
 
@@ -47,6 +50,8 @@ public class Reporte {
 
     @Column(name = "apoyo")
     private Integer apoyo;
+
+    // ===== GETTERS Y SETTERS =====
 
     public Integer getIdReporte() { return idReporte; }
     public void setIdReporte(Integer idReporte) { this.idReporte = idReporte; }
@@ -68,6 +73,9 @@ public class Reporte {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getBarrio() { return barrio; }
+    public void setBarrio(String barrio) { this.barrio = barrio; }
 
     public BigDecimal getLatitud() { return latitud; }
     public void setLatitud(BigDecimal latitud) { this.latitud = latitud; }
