@@ -50,12 +50,12 @@ public class UsuarioController {
             );
 
             Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
-            System.out.println("✅ Usuario guardado con ID: " + usuarioGuardado.getId());
+            System.out.println("✅ Usuario guardado con ID: " + usuarioGuardado.getIdUsuario());
 
             response.put("success", true);
             response.put("mensaje", "Usuario registrado exitosamente");
             response.put("usuario", Map.of(
-                    "id", usuarioGuardado.getId(),
+                    "id", usuarioGuardado.getIdUsuario(),
                     "email", usuarioGuardado.getEmail(),
                     "nombreCompleto", usuarioGuardado.getNombreCompleto(),
                     "rol", usuarioGuardado.getRol()
@@ -105,7 +105,7 @@ public class UsuarioController {
 
             response.put("success", true);
             response.put("mensaje", "Login exitoso");
-            response.put("id", usuario.getId());
+            response.put("id", usuario.getIdUsuario());
             response.put("email", usuario.getEmail());
             response.put("nombreCompleto", usuario.getNombreCompleto());
             response.put("rol", usuario.getRol());
