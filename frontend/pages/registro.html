@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - ReportApp</title>
+</head>
+<body>
+  <main>
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-box"><i class="bi bi-exclamation-triangle"></i></div>
+          <span>ReportApp</span>
+        </div>
+
+        <h2>Crear cuenta</h2>
+        <p class="auth-subtitle">Únete a la comunidad ciudadana</p>
+
+        <div class="auth-form">
+          <!-- Selección de rol -->
+          <div class="campo-grupo">
+            <label>Tipo de cuenta *</label>
+            <div class="roles-grid" id="roles-registro">
+              <button type="button" class="rol-reg-btn selected" data-rol="ciudadano">
+                <span class="rol-icon">👤</span>
+                <span class="rol-nombre">Ciudadano</span>
+                <span class="rol-desc">Crear reportes, apoyar</span>
+              </button>
+              <button type="button" class="rol-reg-btn" data-rol="veedor">
+                <span class="rol-icon">🛡️</span>
+                <span class="rol-nombre">Veedor</span>
+                <span class="rol-desc">Moderar reportes</span>
+              </button>
+              <button type="button" class="rol-reg-btn" data-rol="entidad">
+                <span class="rol-icon">🏛️</span>
+                <span class="rol-nombre">Entidad</span>
+                <span class="rol-desc">Gestionar reportes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Campos comunes -->
+          <div class="campo-grupo">
+            <label>Nombre completo *</label>
+            <div class="campo-input">
+              <i class="bi bi-person"></i>
+              <input type="text" id="reg-nombre" placeholder="Tu nombre completo" />
+            </div>
+          </div>
+
+          <div class="campo-grupo">
+            <label>Correo electrónico *</label>
+            <div class="campo-input">
+              <i class="bi bi-envelope"></i>
+              <input type="email" id="reg-email" placeholder="tu@email.com" />
+            </div>
+          </div>
+
+          <div class="campo-grupo">
+            <label>Contraseña *</label>
+            <div class="campo-input">
+              <i class="bi bi-lock"></i>
+              <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" />
+              <button class="btn-toggle-pass" id="toggle-reg-pass" type="button">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="campo-grupo">
+            <label>Confirmar contraseña *</label>
+            <div class="campo-input">
+              <i class="bi bi-lock"></i>
+              <input type="password" id="reg-confirm-password" placeholder="Repite tu contraseña" />
+            </div>
+          </div>
+
+          <!-- Campo barrio (solo para ciudadanos) -->
+          <div class="campo-grupo" id="campo-barrio">
+            <label>Barrio</label>
+            <div class="campo-input">
+              <i class="bi bi-geo-alt"></i>
+              <input type="text" id="reg-barrio" placeholder="Tu barrio (opcional)" />
+            </div>
+          </div>
+
+          <!-- Campos para entidad -->
+          <div id="campos-entidad" style="display:none">
+            <div class="campo-grupo">
+              <label>Nombre de la institución *</label>
+              <div class="campo-input">
+                <i class="bi bi-building"></i>
+                <input type="text" id="reg-institucion" placeholder="Ej: Alcaldía Municipal" />
+              </div>
+            </div>
+            <div class="campo-grupo">
+              <label>NIT (opcional)</label>
+              <div class="campo-input">
+                <i class="bi bi-card-text"></i>
+                <input type="text" id="reg-nit" placeholder="NIT de la institución" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Términos y condiciones -->
+          <div class="campo-grupo" style="flex-direction: row; align-items: center; gap: 8px;">
+            <input type="checkbox" id="reg-terminos" style="width: 18px; height: 18px;">
+            <label style="margin:0; font-size:12px;">
+              Acepto los <a href="#" id="terminos-link" style="color:var(--primary)">términos y condiciones</a>
+            </label>
+          </div>
+
+          <div class="auth-error" id="reg-error" style="display:none">
+            <i class="bi bi-exclamation-circle"></i>
+            <span id="reg-error-msg">Error al registrarse</span>
+          </div>
+
+          <button class="btn-auth" id="btn-registro">
+            <span id="btn-reg-text">Crear cuenta</span>
+            <span id="btn-reg-loading" style="display:none">⏳ Creando cuenta...</span>
+          </button>
+
+          <p class="auth-link">
+            ¿Ya tienes cuenta?
+            <button class="link-btn" id="btn-ir-login-desde-reg">Inicia sesión aquí</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

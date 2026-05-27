@@ -1,18 +1,18 @@
 import { crearCard } from "../components/cards.js";
-import { API_URL } from './api-config.js';
+import { API_URL } from "./api-config.js";
 
 let reportesGlobal = [];
 let categoriasGlobal = [];
 
 async function cargarReportes() {
-    try {
-        const response = await fetch(`${API_URL}/reportes`);
-        reportesGlobal = await response.json();
-        return reportesGlobal;
-    } catch (error) {
-        console.error("Error cargando reportes:", error);
-        return [];
-    }
+  try {
+    const response = await fetch(`${API_URL}/reportes`);
+    reportesGlobal = await response.json();
+    return reportesGlobal;
+  } catch (error) {
+    console.error("Error cargando reportes:", error);
+    return [];
+  }
 }
 
 async function cargarCategorias() {
@@ -27,22 +27,23 @@ async function cargarCategorias() {
 }
 
 function renderExplorarCards(data) {
-    const container = document.querySelector(".explorar-cards");
-    const sinResultados = document.getElementById("sin-resultados");
-    const totalEl = document.getElementById("total-encontrados");
+  const container = document.querySelector(".explorar-cards");
+  const sinResultados = document.getElementById("sin-resultados");
+  const totalEl = document.getElementById("total-encontrados");
 
-    if (!container) return;
-    container.innerHTML = "";
+  if (!container) return;
+  container.innerHTML = "";
 
-    if (data.length === 0) {
-        sinResultados.style.display = "flex";
-        if (totalEl) totalEl.textContent = "0";
-        return;
-    }
+  if (data.length === 0) {
+    sinResultados.style.display = "flex";
+    if (totalEl) totalEl.textContent = "0";
+    return;
+  }
 
-    sinResultados.style.display = "none";
-    if (totalEl) totalEl.textContent = data.length;
+  sinResultados.style.display = "none";
+  if (totalEl) totalEl.textContent = data.length;
 
+<<<<<<< HEAD
     data.forEach((rep) => {
         // Asegurar que el reporte tenga el nombre de categoría
         if (rep.categoria && typeof rep.categoria === 'object') {
@@ -60,9 +61,23 @@ function aplicarFiltros() {
     const categoriaSeleccionada = document.getElementById("filtroCategoria")?.value || "todas";
     const estadoSeleccionado = document.getElementById("filtroEstado")?.value || "todos";
     const orden = document.getElementById("ordenar")?.value || "recientes";
+=======
+  data.forEach((rep) => {
+    const card = crearCard(rep, null);
+    container.appendChild(card);
+  });
+}
 
-    let resultado = [...reportesGlobal];
+function aplicarFiltros() {
+  const categoria =
+    document.getElementById("filtroCategoria")?.value || "todas";
+  const estado = document.getElementById("filtroEstado")?.value || "todos";
+  const orden = document.getElementById("ordenar")?.value || "recientes";
+>>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
 
+  let resultado = [...reportesGlobal];
+
+<<<<<<< HEAD
     console.log("Categoría seleccionada:", categoriaSeleccionada);
     console.log("Estado seleccionado:", estadoSeleccionado);
 
@@ -98,25 +113,64 @@ function aplicarFiltros() {
 
     console.log("Resultados después de filtrar:", resultado.length);
     renderExplorarCards(resultado);
+=======
+  if (categoria !== "todas") {
+    resultado = resultado.filter((r) => r.categoria?.nombre === categoria);
+  }
+
+  if (estado !== "todos") {
+    resultado = resultado.filter((r) => r.estado === estado);
+  }
+
+  if (orden === "recientes") {
+    resultado.sort(
+      (a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion),
+    );
+  }
+  if (orden === "antiguos") {
+    resultado.sort(
+      (a, b) => new Date(a.fechaCreacion) - new Date(b.fechaCreacion),
+    );
+  }
+  if (orden === "populares") resultado.sort((a, b) => b.apoyo - a.apoyo);
+  if (orden === "vistas") resultado.sort((a, b) => b.vistas - a.vistas);
+
+  renderExplorarCards(resultado);
+>>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
 }
 
 function limpiarFiltros() {
-    document.getElementById("filtroCategoria").value = "todas";
-    document.getElementById("filtroEstado").value = "todos";
-    document.getElementById("ordenar").value = "recientes";
-    aplicarFiltros();
+  document.getElementById("filtroCategoria").value = "todas";
+  document.getElementById("filtroEstado").value = "todos";
+  document.getElementById("ordenar").value = "recientes";
+  aplicarFiltros();
 }
 
 function configurarEventos() {
-    document.getElementById("filtroCategoria")?.addEventListener("change", aplicarFiltros);
-    document.getElementById("filtroEstado")?.addEventListener("change", aplicarFiltros);
-    document.getElementById("ordenar")?.addEventListener("change", aplicarFiltros);
-    document.getElementById("btn-limpiar-filtros")?.addEventListener("click", limpiarFiltros);
+  document
+    .getElementById("filtroCategoria")
+    ?.addEventListener("change", aplicarFiltros);
+  document
+    .getElementById("filtroEstado")
+    ?.addEventListener("change", aplicarFiltros);
+  document
+    .getElementById("ordenar")
+    ?.addEventListener("change", aplicarFiltros);
+  document
+    .getElementById("btn-limpiar-filtros")
+    ?.addEventListener("click", limpiarFiltros);
 }
 
 export async function initExplorar() {
+<<<<<<< HEAD
     await cargarCategorias();
     await cargarReportes();
     configurarEventos();
     aplicarFiltros();
 }
+=======
+  await cargarReportes();
+  configurarEventos();
+  aplicarFiltros();
+}
+>>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
