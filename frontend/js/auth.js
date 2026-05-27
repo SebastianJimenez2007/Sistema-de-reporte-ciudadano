@@ -19,6 +19,9 @@ export function estaLogueado() {
   return getSesion() !== null;
 }
 
+// ===== CONFIGURACIÓN BACKEND =====
+const API_URL = 'http://localhost:8080/api';
+
 // ===== DATOS DE ROLES =====
 export const rolesInfo = {
   ciudadano: { 
@@ -378,36 +381,60 @@ export function initLogin() {
       if (btnLoad) btnLoad.style.display = "inline";
       if (errorEl) errorEl.style.display = "none";
 
-      await new Promise(r => setTimeout(r, 500));
-
-      const usuario = usuariosDB.find(
-        u => u.email === email && u.password === password && u.rol === rolSeleccionado
-      );
-
-      if (btnText) btnText.style.display = "inline";
-      if (btnLoad) btnLoad.style.display = "none";
-
-      if (!usuario) {
-        if (errorMsg) errorMsg.textContent = "Credenciales incorrectas o rol incorrecto";
+      // ===== LLAMADA AL BACKEND =====
+      try {
+        const response = await fetch(`${API_URL}/usuarios/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (btnText) btnText.style.display = "inline";
+        if (btnLoad) btnLoad.style.display = "none";
+        
+        if (!data.success) {
+          if (errorMsg) errorMsg.textContent = data.mensaje || "Credenciales incorrectas";
+          if (errorEl) errorEl.style.display = "flex";
+          return;
+        }
+        
+        // Mapear rol de la BD al formato del frontend
+        let rolFrontend = data.rol.toLowerCase();
+        if (rolFrontend === "validador") rolFrontend = "veedor";
+        if (rolFrontend === "admin") rolFrontend = "admin";
+        if (rolFrontend === "ciudadano") rolFrontend = "ciudadano";
+        if (rolFrontend === "entidad") rolFrontend = "entidad";
+        
+        // Verificar que el rol coincida con el seleccionado
+        if (rolFrontend !== rolSeleccionado) {
+          if (errorMsg) errorMsg.textContent = `El rol seleccionado (${rolSeleccionado}) no coincide con tu cuenta (${rolFrontend})`;
+          if (errorEl) errorEl.style.display = "flex";
+          return;
+        }
+        
+        // Guardar sesión
+        setSesion({ 
+          id: data.id, 
+          nombre: data.nombreCompleto,
+          email: data.email, 
+          rol: rolFrontend,
+          avatar: rolesInfo[rolFrontend]?.icon || "👤",
+          fechaRegistro: new Date().toISOString().split('T')[0]
+        });
+        
+        const destino = rolesInfo[rolFrontend].ventana;
+        window.location.hash = `#${destino}`;
+        location.reload();
+        
+      } catch (error) {
+        if (btnText) btnText.style.display = "inline";
+        if (btnLoad) btnLoad.style.display = "none";
+        if (errorMsg) errorMsg.textContent = "Error de conexión con el servidor. ¿El backend está corriendo?";
         if (errorEl) errorEl.style.display = "flex";
-        return;
+        console.error("Error en login:", error);
       }
-
-      setSesion({ 
-        id: usuario.id, 
-        nombre: usuario.nombre, 
-        email: usuario.email, 
-        rol: usuario.rol,
-        avatar: usuario.avatar,
-        fechaRegistro: usuario.fechaRegistro,
-        ...(usuario.institucion && { institucion: usuario.institucion }),
-        ...(usuario.reportes && { reportes: usuario.reportes }),
-        ...(usuario.apoyosDados && { apoyosDados: usuario.apoyosDados })
-      });
-
-      const destino = rolesInfo[usuario.rol].ventana;
-      window.location.hash = `#${destino}`;
-      location.reload();
     });
   }
 }
@@ -496,12 +523,6 @@ export function initRegistro() {
         return;
       }
 
-      if (usuariosDB.some(u => u.email === email)) {
-        if (errorMsg) errorMsg.textContent = "Este correo ya está registrado";
-        if (errorEl) errorEl.style.display = "flex";
-        return;
-      }
-
       if (rolSeleccionado === "entidad" && !institucion) {
         if (errorMsg) errorMsg.textContent = "Ingresa el nombre de la institución";
         if (errorEl) errorEl.style.display = "flex";
@@ -512,66 +533,75 @@ export function initRegistro() {
       if (btnLoad) btnLoad.style.display = "inline";
       if (errorEl) errorEl.style.display = "none";
 
-      await new Promise(r => setTimeout(r, 1000));
-
-      const nuevoId = usuariosDB.length + 1;
-      const nuevoUsuario = {
-        id: nuevoId,
-        nombre,
-        email,
-        password,
-        rol: rolSeleccionado,
-        avatar: rolSeleccionado === "ciudadano" ? "👤" : rolSeleccionado === "veedor" ? "🛡️" : "🏛️",
-        fechaRegistro: new Date().toISOString().split('T')[0],
-      };
-
-      if (rolSeleccionado === "ciudadano") {
-        nuevoUsuario.reportes = [];
-        nuevoUsuario.apoyosDados = [];
-        nuevoUsuario.barrio = barrio || "";
-      } else if (rolSeleccionado === "veedor") {
-        nuevoUsuario.reportesModerados = [];
-        nuevoUsuario.reportesValidados = [];
-        nuevoUsuario.reportesRechazados = [];
-        nuevoUsuario.entidad = "Ciudadano";
-      } else if (rolSeleccionado === "entidad") {
-        nuevoUsuario.institucion = institucion;
-        nuevoUsuario.nit = nit || "";
-        nuevoUsuario.reportesAsignados = [];
-        nuevoUsuario.reportesProceso = [];
-        nuevoUsuario.reportesResueltos = [];
+      // ===== LLAMADA AL BACKEND =====
+      try {
+        // Convertir rol al formato del backend
+        let rolBackend = "";
+        switch (rolSeleccionado) {
+          case "ciudadano": rolBackend = "CIUDADANO"; break;
+          case "veedor": rolBackend = "VEEDOR"; break;
+          case "entidad": rolBackend = "ENTIDAD"; break;
+          case "admin": rolBackend = "ADMINISTRADOR"; break;
+        }
+        
+        const response = await fetch(`${API_URL}/usuarios/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            nombreCompleto: nombre,
+            rol: rolBackend,
+            aceptaTerminos: terminos,
+            barrio: barrio || ""
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (btnText) btnText.style.display = "inline";
+        if (btnLoad) btnLoad.style.display = "none";
+        
+        if (!data.success) {
+          if (errorMsg) errorMsg.textContent = data.error || "Error en el registro";
+          if (errorEl) errorEl.style.display = "flex";
+          return;
+        }
+        
+        // Guardar sesión
+        let rolFrontend = data.usuario.rol.toLowerCase();
+        if (rolFrontend === "validador") rolFrontend = "veedor";
+        
+        setSesion({ 
+          id: data.usuario.id, 
+          nombre: data.usuario.nombreCompleto,
+          email: data.usuario.email, 
+          rol: rolFrontend,
+          avatar: rolesInfo[rolFrontend]?.icon || "👤",
+          fechaRegistro: new Date().toISOString().split('T')[0]
+        });
+        
+        if (errorEl && errorMsg) {
+          errorEl.style.background = "#dcfce7";
+          errorEl.style.border = "1px solid #22c55e";
+          errorMsg.style.color = "#16a34a";
+          errorMsg.textContent = "✅ ¡Registro exitoso! Redirigiendo...";
+          errorEl.style.display = "flex";
+        }
+        
+        setTimeout(() => {
+          const destino = rolesInfo[rolSeleccionado].ventana;
+          window.location.hash = `#${destino}`;
+          location.reload();
+        }, 1500);
+        
+      } catch (error) {
+        if (btnText) btnText.style.display = "inline";
+        if (btnLoad) btnLoad.style.display = "none";
+        if (errorMsg) errorMsg.textContent = "Error de conexión con el servidor. ¿El backend está corriendo?";
+        if (errorEl) errorEl.style.display = "flex";
+        console.error("Error en registro:", error);
       }
-
-      usuariosDB.push(nuevoUsuario);
-      
-      setSesion({ 
-        id: nuevoUsuario.id, 
-        nombre: nuevoUsuario.nombre, 
-        email: nuevoUsuario.email, 
-        rol: nuevoUsuario.rol,
-        avatar: nuevoUsuario.avatar,
-        fechaRegistro: nuevoUsuario.fechaRegistro,
-        ...(nuevoUsuario.institucion && { institucion: nuevoUsuario.institucion })
-      });
-
-      if (btnText) btnText.style.display = "inline";
-      if (btnLoad) btnLoad.style.display = "none";
-
-      if (errorEl && errorMsg) {
-        errorEl.style.background = "#dcfce7";
-        errorEl.style.border = "1px solid #22c55e";
-        errorMsg.style.color = "#16a34a";
-        errorMsg.textContent = "✅ ¡Registro exitoso! Redirigiendo...";
-        errorEl.style.display = "flex";
-      } else {
-        alert("✅ ¡Registro exitoso!");
-      }
-      
-      setTimeout(() => {
-        const destino = rolesInfo[rolSeleccionado].ventana;
-        window.location.hash = `#${destino}`;
-        location.reload();
-      }, 1500);
     });
   }
 }
