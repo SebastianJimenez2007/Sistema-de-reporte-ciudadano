@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión - ReportApp</title>
+</head>
+<body>
+  <main>
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-box"><i class="bi bi-exclamation-triangle"></i></div>
+          <span>ReportApp</span>
+        </div>
+
+        <!-- PASO 1: SELECCIONAR ROL -->
+        <div id="paso-rol">
+          <h2>Iniciar Sesión</h2>
+          <p class="auth-subtitle">Selecciona tu rol para continuar</p>
+
+          <div class="roles-grid">
+            <button class="rol-btn" data-rol="ciudadano">
+              <span class="rol-icon">👤</span>
+              <span class="rol-nombre">Ciudadano</span>
+              <span class="rol-desc">Crear reportes, apoyar y participar</span>
+            </button>
+            <button class="rol-btn" data-rol="veedor">
+              <span class="rol-icon">🛡️</span>
+              <span class="rol-nombre">Veedor</span>
+              <span class="rol-desc">Validar y moderar reportes</span>
+            </button>
+            <button class="rol-btn" data-rol="entidad">
+              <span class="rol-icon">🏛️</span>
+              <span class="rol-nombre">Entidad / Alcaldía</span>
+              <span class="rol-desc">Gestionar reportes institucionales</span>
+            </button>
+            <button class="rol-btn" data-rol="admin">
+              <span class="rol-icon">👑</span>
+              <span class="rol-nombre">Administrador</span>
+              <span class="rol-desc">Control total del sistema</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PASO 2: FORMULARIO DE LOGIN -->
+        <div id="paso-form" style="display:none">
+          <button class="btn-volver" id="btn-volver">
+            <i class="bi bi-arrow-left"></i> Volver
+          </button>
+
+          <div class="rol-seleccionado" id="rol-seleccionado-badge">
+            <span id="rol-icon-badge">👤</span>
+            <span id="rol-nombre-badge">Ciudadano</span>
+            <span id="rol-desc-badge" style="font-size:11px; margin-left:8px;"></span>
+          </div>
+
+          <div class="auth-form">
+            <div class="campo-grupo">
+              <label>Correo electrónico</label>
+              <div class="campo-input">
+                <i class="bi bi-envelope"></i>
+                <input type="email" id="login-email" placeholder="tu@email.com" />
+              </div>
+            </div>
+
+            <div class="campo-grupo">
+              <label>Contraseña</label>
+              <div class="campo-input">
+                <i class="bi bi-lock"></i>
+                <input type="password" id="login-password" placeholder="********" />
+                <button class="btn-toggle-pass" id="toggle-pass" type="button">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="auth-error" id="auth-error" style="display:none">
+              <i class="bi bi-exclamation-circle"></i>
+              <span id="auth-error-msg">Error al iniciar sesión</span>
+            </div>
+
+            <button class="btn-auth" id="btn-login">
+              <span id="btn-login-text">Iniciar Sesión</span>
+              <span id="btn-login-loading" style="display:none">⏳ Validando...</span>
+            </button>
+
+            <p class="auth-link">
+              ¿No tienes cuenta?
+              <button class="link-btn" id="btn-ir-registro-desde-login">Regístrate aquí</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
