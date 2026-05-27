@@ -43,25 +43,6 @@ function renderExplorarCards(data) {
   sinResultados.style.display = "none";
   if (totalEl) totalEl.textContent = data.length;
 
-<<<<<<< HEAD
-    data.forEach((rep) => {
-        // Asegurar que el reporte tenga el nombre de categoría
-        if (rep.categoria && typeof rep.categoria === 'object') {
-            rep.categoriaNombre = rep.categoria.nombre;
-        } else if (rep.id_categoria) {
-            const cat = categoriasGlobal.find(c => c.idCategoria === rep.id_categoria);
-            rep.categoriaNombre = cat ? cat.nombre : "Sin categoría";
-        }
-        const card = crearCard(rep, null);
-        container.appendChild(card);
-    });
-}
-
-function aplicarFiltros() {
-    const categoriaSeleccionada = document.getElementById("filtroCategoria")?.value || "todas";
-    const estadoSeleccionado = document.getElementById("filtroEstado")?.value || "todos";
-    const orden = document.getElementById("ordenar")?.value || "recientes";
-=======
   data.forEach((rep) => {
     const card = crearCard(rep, null);
     container.appendChild(card);
@@ -69,74 +50,33 @@ function aplicarFiltros() {
 }
 
 function aplicarFiltros() {
-  const categoria =
-    document.getElementById("filtroCategoria")?.value || "todas";
-  const estado = document.getElementById("filtroEstado")?.value || "todos";
+  const categoriaSeleccionada = document.getElementById("filtroCategoria")?.value || "todas";
+  const estadoSeleccionado = document.getElementById("filtroEstado")?.value || "todos";
   const orden = document.getElementById("ordenar")?.value || "recientes";
->>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
 
   let resultado = [...reportesGlobal];
 
-<<<<<<< HEAD
-    console.log("Categoría seleccionada:", categoriaSeleccionada);
-    console.log("Estado seleccionado:", estadoSeleccionado);
-
-    // Filtro por categoría
-    if (categoriaSeleccionada !== "todas") {
-        resultado = resultado.filter(r => {
-            // Obtener nombre de categoría
-            let nombreCategoria = "";
-            if (r.categoria && r.categoria.nombre) {
-                nombreCategoria = r.categoria.nombre;
-            } else if (r.id_categoria) {
-                const cat = categoriasGlobal.find(c => c.idCategoria === r.id_categoria);
-                nombreCategoria = cat ? cat.nombre : "";
-            }
-            return nombreCategoria === categoriaSeleccionada;
-        });
-    }
-
-    // Filtro por estado (coincidencia exacta)
-    if (estadoSeleccionado !== "todos") {
-        resultado = resultado.filter(r => r.estado === estadoSeleccionado);
-    }
-
-    // Ordenar
-    if (orden === "recientes") {
-        resultado.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
-    }
-    if (orden === "antiguos") {
-        resultado.sort((a, b) => new Date(a.fechaCreacion) - new Date(b.fechaCreacion));
-    }
-    if (orden === "populares") resultado.sort((a, b) => (b.apoyo || 0) - (a.apoyo || 0));
-    if (orden === "vistas") resultado.sort((a, b) => (b.vistas || 0) - (a.vistas || 0));
-
-    console.log("Resultados después de filtrar:", resultado.length);
-    renderExplorarCards(resultado);
-=======
-  if (categoria !== "todas") {
-    resultado = resultado.filter((r) => r.categoria?.nombre === categoria);
+  // Filtro por categoría
+  if (categoriaSeleccionada !== "todas") {
+    resultado = resultado.filter((r) => r.categoria?.nombre === categoriaSeleccionada);
   }
 
-  if (estado !== "todos") {
-    resultado = resultado.filter((r) => r.estado === estado);
+  // Filtro por estado
+  if (estadoSeleccionado !== "todos") {
+    resultado = resultado.filter((r) => r.estado === estadoSeleccionado);
   }
 
+  // Ordenar
   if (orden === "recientes") {
-    resultado.sort(
-      (a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion),
-    );
+    resultado.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
   }
   if (orden === "antiguos") {
-    resultado.sort(
-      (a, b) => new Date(a.fechaCreacion) - new Date(b.fechaCreacion),
-    );
+    resultado.sort((a, b) => new Date(a.fechaCreacion) - new Date(b.fechaCreacion));
   }
-  if (orden === "populares") resultado.sort((a, b) => b.apoyo - a.apoyo);
-  if (orden === "vistas") resultado.sort((a, b) => b.vistas - a.vistas);
+  if (orden === "populares") resultado.sort((a, b) => (b.apoyo || 0) - (a.apoyo || 0));
+  if (orden === "vistas") resultado.sort((a, b) => (b.vistas || 0) - (a.vistas || 0));
 
   renderExplorarCards(resultado);
->>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
 }
 
 function limpiarFiltros() {
@@ -162,15 +102,8 @@ function configurarEventos() {
 }
 
 export async function initExplorar() {
-<<<<<<< HEAD
-    await cargarCategorias();
-    await cargarReportes();
-    configurarEventos();
-    aplicarFiltros();
-}
-=======
+  await cargarCategorias();
   await cargarReportes();
   configurarEventos();
   aplicarFiltros();
 }
->>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5

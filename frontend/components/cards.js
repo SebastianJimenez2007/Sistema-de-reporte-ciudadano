@@ -15,13 +15,8 @@ export function crearCard(rep, onOpen) {
 
   card.innerHTML = `
     <div class="card-img">
-<<<<<<< HEAD
       <img src="${rep.imagenUrl ? `http://localhost:8085${rep.imagenUrl}` : 'https://picsum.photos/400/200?1'}" alt="${rep.titulo}">
       <span class="estado ${rep.estado || 'activo'}"></span>
-=======
-      <img src="${rep.imagenUrl || "https://picsum.photos/400/200?1"}" alt="${rep.titulo}">
-      <span class="estado ${rep.estado || "activo"}"></span>
->>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
     </div>
 
     <div class="card-body">
@@ -54,19 +49,6 @@ export function crearCard(rep, onOpen) {
     btn.textContent = "...";
 
     try {
-<<<<<<< HEAD
-        const response = await fetch(`${API_URL}/reportes/${rep.idReporte}/apoyar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (response.ok) {
-            rep.apoyo = (rep.apoyo || 0) + 1;
-            apoyosText.textContent = rep.apoyo;
-        }
-    } catch (error) {
-        console.error('Error al apoyar:', error);
-=======
       const response = await fetch(
         `${API_URL}/reportes/${rep.idReporte}/apoyar`,
         {
@@ -91,7 +73,6 @@ export function crearCard(rep, onOpen) {
       console.error("Error al apoyar:", error);
       btn.textContent = originalText;
       btn.disabled = false;
->>>>>>> 570314d439576c984de0170a802ba20d1f17b0b5
     }
   });
 
