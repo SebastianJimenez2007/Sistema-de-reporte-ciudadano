@@ -36,7 +36,7 @@ public class Usuario {
     // Constructor vacío
     public Usuario() {}
 
-    // Constructor para registro (sin barrio)
+    // Constructor para registro
     public Usuario(String email, String password, String nombreCompleto, String rol) {
         this.email = email;
         this.password = password;
